@@ -1,0 +1,376 @@
+scopeName: 'text.html.typo3-fluid'
+name: 'TYPO3 Fluid'
+fileTypes: [
+  'html'
+]
+firstLineMatch: '''(?xi)
+  # html element with fluid xmlns definition
+  <html\\s+xmlns:[a-zA-Z][.a-zA-Z0-9]*="http:\\/\\/typo3\\.org\\/ns\\/[^"]+"
+  |
+  # fluid namespace definition in inline notation
+  \\{namespace\\s+[a-zA-Z][.a-zA-Z0-9]*=[^}]+\\s*\\}
+'''
+patterns: [
+  {
+    match: '({)(namespace)\\s+([a-zA-Z][.a-zA-Z0-9]*)(=)([^}]+)\\s*(})'
+    captures:
+      1:
+        name: 'punctuation.definition.bold.inline-notation.begin.typo3-fluid'
+      2:
+        name: 'keyword.namespace.typo3-fluid'
+      3:
+        name: 'variable.ns-prefix-$1.phpns-prefix.typo3-fluid'
+      4:
+        name: 'punctuation.separator.prefix-namespace.typo3-fluid'
+      5:
+        name: 'string.other.link.ns-prefix-$1.phpns-typo3.typo3-fluid'
+      6:
+        name: 'punctuation.definition.bold.inline-notation.end.typo3-fluid'
+    name: 'meta.phpns-definition.typo3-fluid'
+  }
+  {
+    begin: '(</?)([a-zA-Z][.a-zA-Z0-9]*)(:)([a-zA-Z][.a-zA-Z0-9]*)?'
+    beginCaptures:
+      1:
+        name: 'punctuation.definition.tag.begin.typo3-fluid'
+      2:
+        name: 'entity.name.tag.ns-prefix-$2.xmlns-prefix.typo3-fluid'
+      3:
+        name: 'entity.name.tag.colon.typo3-fluid'
+      4:
+        name: 'entity.name.tag.view-helper.typo3-fluid'
+    end: '>'
+    endCaptures:
+      0:
+        name: 'punctuation.definition.tag.end.typo3-fluid'
+    name: 'meta.fluid-tag.view-helper.typo3-fluid'
+    patterns: [
+      {
+        include: '#tag-stuff'
+      }
+    ]
+  }
+  {
+    include: '#inline-notation'
+  }
+  {
+    include: 'text.html.basic'
+  }
+]
+injections:
+  'L:meta.tag.structure.html.html':
+    patterns: [
+      {
+        match: '\\b(xmlns:)([a-zA-Z][.a-zA-Z0-9]*)(=)((")(http:\\/\\/typo3\\.org\\/ns\\/[^"]+)("))'
+        captures:
+          1:
+            name: 'entity.other.attribute-name.xmlns-and-colon.typo3-fluid'
+          2:
+            name: 'variable.ns-prefix-$2.xmlns-prefix.typo3-fluid'
+          3:
+            name: 'punctuation.separator.key-value.typo3-fluid'
+          4:
+            name: 'string.quoted.double.typo3-fluid'
+          5:
+            name: 'punctuation.definition.string.begin.typo3-fluid'
+          6:
+            name: 'string.other.link.ns-prefix-$2.xmlns-typo3.typo3-fluid'
+          7:
+            name: 'punctuation.definition.string.end.typo3-fluid'
+      }
+      {
+        match: '\\b(xmlns:)([a-zA-Z][.a-zA-Z0-9]*)(=)((\')(http:\\/\\/typo3.org\\/ns\\/[^\']+)(\'))'
+        captures:
+          1:
+            name: 'entity.other.attribute-name.xmlns-and-colon.typo3-fluid'
+          2:
+            name: 'variable.ns-prefix-$2.xmlns-prefix.typo3-fluid'
+          3:
+            name: 'punctuation.separator.key-value.typo3-fluid'
+          4:
+            name: 'string.quoted.single.typo3-fluid'
+          5:
+            name: 'punctuation.definition.string.begin.typo3-fluid'
+          6:
+            name: 'string.other.link.ns-prefix-$2.xmlns-typo3.typo3-fluid'
+          7:
+            name: 'punctuation.definition.string.end.typo3-fluid'
+      }
+      {
+        match: '\\b(data-namespace-typo3-fluid)(=)((")(true)("))'
+        captures:
+          1:
+            name: 'entity.other.attribute-name.data-namespace-typo3-fluid.typo3-fluid'
+          2:
+            name: 'punctuation.separator.key-value.typo3-fluid'
+          3:
+            name: 'string.quoted.double.typo3-fluid'
+          4:
+            name: 'punctuation.definition.string.begin.typo3-fluid'
+          5:
+            name: 'attribute-value-true.data-namespace-typo3-fluid.typo3-fluid'
+          6:
+            name: 'punctuation.definition.string.end.typo3-fluid'
+      }
+      {
+        match: '\\b(data-namespace-typo3-fluid)(=)((\')(true)(\'))'
+        captures:
+          1:
+            name: 'entity.other.attribute-name.data-namespace-typo3-fluid.typo3-fluid'
+          2:
+            name: 'punctuation.separator.key-value.typo3-fluid'
+          3:
+            name: 'string.quoted.single.typo3-fluid'
+          4:
+            name: 'punctuation.definition.string.begin.typo3-fluid'
+          5:
+            name: 'attribute-value-true.data-namespace-typo3-fluid.typo3-fluid'
+          6:
+            name: 'punctuation.definition.string.end.typo3-fluid'
+      }
+    ]
+  'L:text.html meta.tag - source.js.embedded.html, L:string.quoted.double.html, L:string.quoted.single.html':
+    patterns: [
+      {
+        include: '#inline-notation'
+      }
+    ]
+repository:
+  'tag-stuff':
+    patterns: [
+      {
+        include: '#tag-property-attribute'
+      }
+      {
+        include: '#string-double-quoted'
+      }
+      {
+        include: '#string-single-quoted'
+      }
+    ]
+  'tag-property-attribute':
+    begin: '([^\\s/=>"\'<]+)(=)'
+    captures:
+      1:
+        name: 'entity.other.attribute-name.view-helper-property.typo3-fluid'
+      2:
+        name: 'punctuation.separator.key-value.typo3-fluid'
+    end: '(?!\\G)|(?=\\s|/?>)'
+    name: 'meta.attribute-with-value.view-helper-property.typo3-fluid'
+    patterns: [
+      {
+        include: '#string-double-quoted'
+      }
+      {
+        include: '#string-single-quoted'
+      }
+    ]
+  'string-double-quoted':
+    begin: '"'
+    beginCaptures:
+      0:
+        name: 'punctuation.definition.string.begin.typo3-fluid'
+    end: '"'
+    endCaptures:
+      0:
+        name: 'punctuation.definition.string.end.typo3-fluid'
+    name: 'string.quoted.double.typo3-fluid'
+    patterns: [
+      {
+        include: '#inline-notation'
+      }
+    ]
+  'string-single-quoted':
+    begin: '\''
+    beginCaptures:
+      0:
+        name: 'punctuation.definition.string.begin.typo3-fluid'
+    end: '\''
+    endCaptures:
+      0:
+        name: 'punctuation.definition.string.end.typo3-fluid'
+    name: 'string.quoted.single.typo3-fluid'
+    patterns: [
+      {
+        include: '#inline-notation'
+      }
+    ]
+  'inline-notation':
+    begin: '{'
+    beginCaptures:
+      0:
+        name: 'punctuation.definition.bold.inline-notation.begin.typo3-fluid'
+    end: '}'
+    endCaptures:
+      0:
+        name: 'punctuation.definition.bold.inline-notation.end.typo3-fluid'
+    name: 'meta.inline-notation.typo3-fluid'
+    patterns: [
+      {
+        include: '#inline-view-helper'
+      }
+      {
+        include: '#inline-array'
+      }
+      {
+        include: '#inline-expression'
+      }
+      {
+        include: '#inline-variable'
+      }
+    ]
+  'inline-view-helper':
+    patterns: [
+      {
+        match: '\\s(->)\\s+'
+        captures:
+          1:
+            name: 'punctuation.definition.bold.chain.typo3-fluid'
+      }
+      {
+        begin: '([a-zA-Z][.a-zA-Z0-9]*)(:)([a-zA-Z][.a-zA-Z0-9]*)(\\()'
+        beginCaptures:
+          1:
+            name: 'keyword.other.special-method.inline-view-helper-name.ns-prefix-$1.xmlns-prefix.typo3-fluid'
+          2:
+            name: 'keyword.other.special-method.inline-view-helper-name.colon.typo3-fluid'
+          3:
+            name: 'keyword.other.special-method.inline-view-helper-name.view-helper.typo3-fluid'
+          4:
+            name: 'punctuation.definition.inline-view-helper-properties.begin.typo3-fluid'
+        contentName: 'meta.inline-view-helper-properties.typo3-fluid'
+        end: '\\)'
+        endCaptures:
+          0:
+            name: 'punctuation.definition.inline-view-helper-properties.end.typo3-fluid'
+        name: 'meta.inline-view-helper.typo3-fluid'
+        patterns: [
+          {
+            include: '#inline-properties'
+          }
+        ]
+      }
+    ]
+  'inline-properties':
+    begin: '(?<=[(,])\\s*'
+    contentName: 'meta.inline-property.typo3-fluid'
+    end: '(,)|(?=\\))'
+    endCaptures:
+      1:
+        name: 'punctuation.separator.inline-properties.typo3-fluid'
+    patterns: [
+      {
+        include: '#inline-property'
+      }
+    ]
+  'inline-property':
+    begin: '([a-zA-Z][.a-zA-Z0-9]*)(:)\\s*'
+    beginCaptures:
+      1:
+        name: 'constant.variable.inline-property-name.typo3-fluid'
+      2:
+        name: 'punctuation.separator.key-value.typo3-fluid'
+    contentName: 'meta.inline-property-value.typo3-fluid'
+    end: '\\s*(?=[,)])'
+    patterns: [
+      {
+        include: '#inline-content'
+      }
+    ]
+  'inline-content':
+    patterns: [
+      {
+        include: '#inline-string-value'
+      }
+      {
+        include: '#inline-expression'
+      }
+      {
+        include: '#inline-variable'
+      }
+    ]
+  'inline-string-value':
+    begin: '\\\\*\''
+    beginCaptures:
+      0:
+        name: 'punctuation.inline-string-value.begin.typo3-fluid'
+    end: '\\\\*\''
+    endCaptures:
+      0:
+        name: 'punctuation.inline-string-value.end.typo3-fluid'
+    name: 'string.inline-value.typo3-fluid'
+    patterns: [
+      {
+        include: '#inline-notation'
+      }
+    ]
+  'inline-variable':
+    match: '([a-zA-Z][.a-zA-Z0-9]*)(?!:)'
+    captures:
+      1:
+        name: 'variable.inline-variable-name.typo3-fluid'
+  'inline-expression':
+    patterns: [
+      {
+        include: '#inline-expression--cast'
+      }
+      {
+        include: '#inline-expression--math'
+      }
+      {
+        include: '#inline-expression--ternary'
+      }
+    ]
+  'inline-expression--cast':
+    match: '(?<=\\s)(as)\\s+([a-zA-Z][.a-zA-Z]*)'
+    captures:
+      1:
+        name: 'keyword.expression-operator.casting-expression.typo3-fluid'
+      2:
+        name: 'entity.name.type.casting-to-type.typo3-fluid'
+  'inline-expression--math':
+    patterns: [
+      {
+        match: '-?\\d+(?:,\\d+)*(?:\\.\\d+(?:e\\d+)?)?(?!\\:)'
+        name: 'constant.numeric.inline-number.typo3-fluid'
+      }
+      {
+        match: '[\\+\\-\\*\\/\\%\\^]{1}'
+        name: 'keyword.operator.expression-operator.math-expression.typo3-fluid'
+      }
+    ]
+  'inline-expression--ternary':
+    begin: '(?<=\\s)(\\?)\\s+'
+    beginCaptures:
+      1:
+        name: 'keyword.expression-operator.ternary-expression.typo3-fluid'
+    end: '\\s+(:)(?=\\s)'
+    endCaptures:
+      1:
+        name: 'keyword.expression-operator.ternary-expression.typo3-fluid'
+    patterns: [
+      {
+        include: '#inline-content'
+      }
+    ]
+  'inline-array':
+    begin: '(?:(\\d+)|([a-zA-Z][.a-zA-Z]*))(:)'
+    beginCaptures:
+      1:
+        name: 'constant.numeric.array-index.typo3-fluid'
+      2:
+        name: 'constant.variable.array-key.typo3-fluid'
+      3:
+        name: 'punctuation.separator.key-value.typo3-fluid'
+    end: '(?!\\G)|(,)|(?=\\})'
+    endCaptures:
+      1:
+        name: 'punctuation.separator.inline-array-objects.typo3-fluid'
+    patterns: [
+      {
+        include: '#inline-content'
+      }
+      {
+        include: '#inline-notation'
+      }
+    ]
