@@ -12,6 +12,9 @@ firstLineMatch: '''(?xi)
 '''
 patterns: [
   {
+    include: '#fluid-elements'
+  }
+  {
     match: '({)(namespace)\\s+([a-zA-Z][.a-zA-Z0-9]*)(=)([^}]+)\\s*(})'
     captures:
       1:
@@ -136,6 +139,237 @@ injections:
       }
     ]
 repository:
+  'fluid-elements':
+    patterns: [
+      {
+        begin: '''(?x)
+          # self closing fluid element start tag
+          (<)                                      # 1. char: lt
+          (                                        # 2. element name
+            ([a-zA-Z][.a-zA-Z0-9]*)                # 3. namespace prefix
+            (:)                                    # 4. char: colon
+            ([a-zA-Z][.a-zA-Z0-9]*)                # 5. view helper name
+          )
+          # following attributes (optional), slash and greater than
+          (?=(?:\\s+[_a-zA-Z][-_.a-zA-Z0-9:]*=(?:"[^"]*"|\'[^\']*\'))*\\s*\\/>)
+        '''
+        captures:
+          0:
+            name: 'tag.start.typo3-fluid'
+          1:
+            name: 'tag.char.lt.typo3-fluid'
+          2:
+            name: 'tag.element-name.typo3-fluid'
+          3:
+            name: 'tag.namespace-prefix.typo3-fluid'
+          4:
+            name: 'tag.char.colon.typo3-fluid'
+          5:
+            name: 'tag.view-helper-name.typo3-fluid'
+        contentName: 'tag.start.attributes.typo3-fluid'
+        end: '(/)(>)'
+        endCaptures:
+          1:
+            name: 'tag.start.char.slash.typo3-fluid'
+          2:
+            name: 'tag.start.char.gt.typo3-fluid'
+        name: 'tag.element.$2.self-closing.typo3-fluid'
+        patterns: [
+          {
+            include: '#fluid-attributes'
+          }
+        ]
+      }
+      {
+        begin: '''(?x)
+          # empty fluid element start tag
+          (<)                                      # 1. char: lt
+          (                                        # 2. element name
+            ([a-zA-Z][.a-zA-Z0-9]*)                # 3. namespace prefix
+            (:)                                    # 4. char: colon
+            ([a-zA-Z][.a-zA-Z0-9]*)                # 5. view helper name
+          )
+          # following attributes (optional), no content and end tag
+          (?=(?:\\s+[_a-zA-Z][-_.a-zA-Z0-9:]*=(?:"[^"]*"|\'[^\']*\'))*\\s*>\\s*<\\/\\2>)
+        '''
+        captures:
+          0:
+            name: 'tag.start.typo3-fluid'
+          1:
+            name: 'tag.char.lt.typo3-fluid'
+          2:
+            name: 'tag.element-name.typo3-fluid'
+          3:
+            name: 'tag.namespace-prefix.typo3-fluid'
+          4:
+            name: 'tag.char.colon.typo3-fluid'
+          5:
+            name: 'tag.view-helper-name.typo3-fluid'
+        contentName: 'tag.start.attributes.typo3-fluid'
+        end: '''(?x)
+          (>)                           #  1. start char: gt
+          (\\s*)                        #  2. content
+          (                             #  3. end tag
+            (<)                         #  4. char: lt
+            (\\/)                       #  5. char: slash
+            (                           #  6. element name
+              ([a-zA-Z][.a-zA-Z0-9]*)   #  7. namespace prefix
+              (:)                       #  8. char: colon
+              ([a-zA-Z][.a-zA-Z0-9]*)   #  9. view helper name
+            )
+            (>)                         # 10. char: gt
+          )
+        '''
+        endCaptures:
+          1:
+            name: 'tag.start.char.gt.typo3-fluid'
+          2:
+            name: 'tag.content.typo3-fluid'
+          3:
+            name: 'tag.end.typo3-fluid'
+          4:
+            name: 'tag.char.lt.typo3-fluid'
+          5:
+            name: 'tag.char.slash.typo3-fluid'
+          6:
+            name: 'tag.element-name.typo3-fluid'
+          7:
+            name: 'tag.namespace-prefix.typo3-fluid'
+          8:
+            name: 'tag.char.colon.typo3-fluid'
+          9:
+            name: 'tag.view-helper-name.typo3-fluid'
+          10:
+            name: 'tag.char.gt.typo3-fluid'
+        name: 'tag.element.$2.empty.typo3-fluid'
+        patterns: [
+          {
+            include: '#fluid-attributes'
+          }
+        ]
+      }
+      {
+        begin: '''(?x)
+          # fluid element with start and end tag
+          (<)                                      # 1. char: lt
+          (                                        # 2. element name
+            ([a-zA-Z][.a-zA-Z0-9]*)                # 3. namespace prefix
+            (:)                                    # 4. char: colon
+            ([a-zA-Z][.a-zA-Z0-9]*)                # 5. view helper name
+          )
+          (?=[\\s>]) # following space or greater than
+        '''
+        captures:
+          0:
+            name: 'tag.start.typo3-fluid'
+          1:
+            name: 'tag.char.lt.typo3-fluid'
+          2:
+            name: 'tag.element-name.typo3-fluid'
+          3:
+            name: 'tag.namespace-prefix.typo3-fluid'
+          4:
+            name: 'tag.char.colon.typo3-fluid'
+          5:
+            name: 'tag.view-helper-name.typo3-fluid'
+        end: '''(?x)
+          (<)                         # 1. char: lt
+          (\\/)                       # 2. char: slash
+          (                           # 3. element name
+            ([a-zA-Z][.a-zA-Z0-9]*)   # 4. namespace prefix
+            (:)                       # 5. char: colon
+            ([a-zA-Z][.a-zA-Z0-9]*)   # 6. view helper name
+          )
+          (>)                         # 7. char: gt
+        '''
+        endCaptures:
+          0:
+            name: 'tag.end.typo3-fluid'
+          1:
+            name: 'tag.char.lt.typo3-fluid'
+          2:
+            name: 'tag.char.slash.typo3-fluid'
+          3:
+            name: 'tag.element-name.typo3-fluid'
+          4:
+            name: 'tag.namespace-prefix.typo3-fluid'
+          5:
+            name: 'tag.char.colon.typo3-fluid'
+          6:
+            name: 'tag.view-helper-name.typo3-fluid'
+          7:
+            name: 'tag.char.gt.typo3-fluid'
+        name: 'tag.element.$2.typo3-fluid'
+        patterns: [
+          {
+            begin: '\\G'
+            contentName: 'tag.start.attributes.typo3-fluid'
+            end: '>'
+            endCaptures:
+              0:
+                name: 'tag.start.char.gt.typo3-fluid'
+            name: 'tag.start.typo3-fluid'
+            patterns: [
+              {
+                include: '#fluid-attributes'
+              }
+            ]
+          }
+          {
+            begin: '(?<=>)'
+            end: '(?=</[a-zA-Z][.a-zA-Z0-9]*:[a-zA-Z][.a-zA-Z0-9]*>)'
+            name: 'tag.content.typo3-fluid'
+          }
+        ]
+      }
+    ]
+  'fluid-attributes':
+    patterns: [
+      {
+        begin: '''(?x)
+          # attribute with double quoted value
+          (?<=\\s)  # preceding space character
+          ([_a-zA-Z][-_.a-zA-Z0-9:]*)  # 1. attribute name
+          (=)                          # 2. char: equals
+          (")                          # 3. char: quotes
+        '''
+        captures:
+          1:
+            name: 'tag.attribute-name.typo3-fluid'
+          2:
+            name: 'tag.char.equals.typo3-fluid'
+          3:
+            name: 'tag.char.quotes.begin.typo3-fluid'
+        contentName: 'tag.attribute-value.typo3-fluid'
+        end: '"'
+        endCaptures:
+          0:
+            name: 'tag.char.quotes.end.typo3-fluid'
+        name: 'tag.attribute.$1.typo3-fluid'
+      }
+      {
+        begin: '''(?x)
+          # attribute with single quoted value
+          (?<=\\s)  # preceding space character
+          ([_a-zA-Z][-_.a-zA-Z0-9:]*)  # 1. attribute name
+          (=)                          # 2. char: equals
+          (\')                         # 3. char: apos
+        '''
+        captures:
+          1:
+            name: 'tag.attribute-name.typo3-fluid'
+          2:
+            name: 'tag.char.equals.typo3-fluid'
+          3:
+            name: 'tag.char.apos.begin.typo3-fluid'
+        contentName: 'tag.attribute-value.typo3-fluid'
+        end: '\''
+        endCaptures:
+          0:
+            name: 'tag.char.apos.end.typo3-fluid'
+        name: 'tag.attribute.$1.typo3-fluid'
+      }
+    ]
   'tag-stuff':
     patterns: [
       {
