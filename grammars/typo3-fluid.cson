@@ -536,7 +536,7 @@ repository:
         name: 'inline.array.key.typo3-fluid'
       3:
         name: 'inline.array.char.colon.typo3-fluid'
-    end: '(?!\\G)|(,)|(?=\\})'
+    end: '(,)|(?=\\})'
     endCaptures:
       1:
         name: 'inline.array.char.comma.typo3-fluid'
