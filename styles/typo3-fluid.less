@@ -1,0 +1,24 @@
+@import "syntax-variables";
+
+.syntax--typo3-fluid {
+  .syntax--tag {
+    &.syntax--element-name {
+      color: @syntax-color-tag;
+    }
+    &.syntax--attribute-name {
+      color: @syntax-color-attribute;
+    }
+    &.syntax--attribute-value,
+    &.syntax--char.quotes,
+    &.syntax--char.apos {
+      color: @syntax-color-snippet;
+    }
+  }
+  .syntax--inline {
+    &.syntax--char.syntax--curly-bracket,
+    &.syntax--char.syntax--chain {
+      color: @syntax-color-class;
+      font-weight: bold;
+    }
+  }
+}
