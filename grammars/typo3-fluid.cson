@@ -15,17 +15,17 @@ patterns: [
     match: '({)(namespace)\\s+([a-zA-Z][.a-zA-Z0-9]*)(=)([^}]+)\\s*(})'
     captures:
       1:
-        name: 'punctuation.definition.bold.inline-notation.begin.typo3-fluid'
+        name: 'inline.char.curly-bracket.begin.typo3-fluid'
       2:
-        name: 'keyword.namespace.typo3-fluid'
+        name: 'inline.keyword.namespace.typo3-fluid'
       3:
-        name: 'variable.ns-prefix-$1.phpns-prefix.typo3-fluid'
+        name: 'inline.variable.namespace-prefix.typo3-fluid'
       4:
-        name: 'punctuation.separator.prefix-namespace.typo3-fluid'
+        name: 'inline.char.equals.typo3-fluid'
       5:
-        name: 'string.other.link.ns-prefix-$1.phpns-typo3.typo3-fluid'
+        name: 'string.other.link.php-namespace.typo3-fluid'
       6:
-        name: 'punctuation.definition.bold.inline-notation.end.typo3-fluid'
+        name: 'inline.char.curly-bracket.end.typo3-fluid'
     name: 'meta.phpns-definition.typo3-fluid'
   }
   {
@@ -44,6 +44,8 @@ injections:
       {
         match: '\\b(xmlns:)([a-zA-Z][.a-zA-Z0-9]*)(=)((")(http:\\/\\/typo3\\.org\\/ns\\/[^"]+)("))'
         captures:
+          0:
+            name: 'meta.xmlns-definition.typo3-fluid'
           1:
             name: 'entity.other.attribute-name.xmlns-and-colon.typo3-fluid'
           2:
@@ -62,6 +64,8 @@ injections:
       {
         match: '\\b(xmlns:)([a-zA-Z][.a-zA-Z0-9]*)(=)((\')(http:\\/\\/typo3.org\\/ns\\/[^\']+)(\'))'
         captures:
+          0:
+            name: 'meta.xmlns-definition.typo3-fluid'
           1:
             name: 'entity.other.attribute-name.xmlns-and-colon.typo3-fluid'
           2:
@@ -80,6 +84,8 @@ injections:
       {
         match: '\\b(data-namespace-typo3-fluid)(=)((")(true)("))'
         captures:
+          0:
+            name: 'meta.data-namespace-attribute.typo3-fluid'
           1:
             name: 'entity.other.attribute-name.data-namespace-typo3-fluid.typo3-fluid'
           2:
@@ -96,6 +102,8 @@ injections:
       {
         match: '\\b(data-namespace-typo3-fluid)(=)((\')(true)(\'))'
         captures:
+          0:
+            name: 'meta.data-namespace-attribute.typo3-fluid'
           1:
             name: 'entity.other.attribute-name.data-namespace-typo3-fluid.typo3-fluid'
           2:
@@ -168,7 +176,7 @@ repository:
             ([a-zA-Z][.a-zA-Z0-9]*)                # 5. view helper name
           )
           # following attributes (optional), no content and end tag
-          (?=(?:\\s+[_a-zA-Z][-_.a-zA-Z0-9:]*=(?:"[^"]*"|\'[^\']*\'))*\\s*>\\s*<\\/\\2>)
+          (?=(?:\\s+[_a-zA-Z][-_.a-zA-Z0-9:]*=(?:"[^"]*"|\'[^\']*\'))*\\s*><\\/\\2>)
         '''
         captures:
           0:
