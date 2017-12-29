@@ -134,7 +134,7 @@ repository:
           (                                        # 2. element name
             ([a-zA-Z][.a-zA-Z0-9]*)                # 3. namespace prefix
             (:)                                    # 4. char: colon
-            ([a-zA-Z][.a-zA-Z0-9]*)                # 5. view helper name
+            ([a-zA-Z][.a-zA-Z0-9]*)?               # 5. view helper name
           )
           # following attributes (optional), slash and greater than
           (?=(?:\\s+[_a-zA-Z][-_.a-zA-Z0-9:]*=(?:"[^"]*"|\'[^\']*\'))*\\s*\\/>)
@@ -153,13 +153,13 @@ repository:
           5:
             name: 'tag.view-helper-name.typo3-fluid'
         contentName: 'meta.tag.start.attributes.typo3-fluid'
-        end: '((/)(>))'
+        end: '(/)(>)'
         endCaptures:
-          1:
+          0:
             name: 'meta.tag.start.typo3-fluid'
-          2:
+          1:
             name: 'tag.char.slash.typo3-fluid'
-          3:
+          2:
             name: 'tag.char.gt.typo3-fluid'
         name: 'meta.tag.element.$2.self-closing.typo3-fluid'
         patterns: [
@@ -175,7 +175,7 @@ repository:
           (                                        # 2. element name
             ([a-zA-Z][.a-zA-Z0-9]*)                # 3. namespace prefix
             (:)                                    # 4. char: colon
-            ([a-zA-Z][.a-zA-Z0-9]*)                # 5. view helper name
+            ([a-zA-Z][.a-zA-Z0-9]*)?               # 5. view helper name
           )
           # following attributes (optional), no content and end tag
           (?=(?:\\s+[_a-zA-Z][-_.a-zA-Z0-9:]*=(?:"[^"]*"|\'[^\']*\'))*\\s*><\\/\\2>)
@@ -244,7 +244,7 @@ repository:
           (                                        # 2. element name
             ([a-zA-Z][.a-zA-Z0-9]*)                # 3. namespace prefix
             (:)                                    # 4. char: colon
-            ([a-zA-Z][.a-zA-Z0-9]*)                # 5. view helper name
+            ([a-zA-Z][.a-zA-Z0-9]*)?               # 5. view helper name
           )
           (?=[\\s>]) # following space or greater than
         '''
@@ -296,7 +296,7 @@ repository:
             end: '>'
             endCaptures:
               0:
-                name: 'tag.start.char.gt.typo3-fluid'
+                name: 'tag.char.gt.typo3-fluid'
             name: 'meta.tag.start.typo3-fluid'
             patterns: [
               {
