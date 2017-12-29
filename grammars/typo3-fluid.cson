@@ -141,7 +141,7 @@ repository:
         '''
         captures:
           0:
-            name: 'tag.start.typo3-fluid'
+            name: 'meta.tag.start.typo3-fluid'
           1:
             name: 'tag.char.lt.typo3-fluid'
           2:
@@ -152,14 +152,16 @@ repository:
             name: 'tag.char.colon.typo3-fluid'
           5:
             name: 'tag.view-helper-name.typo3-fluid'
-        contentName: 'tag.start.attributes.typo3-fluid'
-        end: '(/)(>)'
+        contentName: 'meta.tag.start.attributes.typo3-fluid'
+        end: '((/)(>))'
         endCaptures:
           1:
-            name: 'tag.start.char.slash.typo3-fluid'
+            name: 'meta.tag.start.typo3-fluid'
           2:
-            name: 'tag.start.char.gt.typo3-fluid'
-        name: 'tag.element.$2.self-closing.typo3-fluid'
+            name: 'tag.char.slash.typo3-fluid'
+          3:
+            name: 'tag.char.gt.typo3-fluid'
+        name: 'meta.tag.element.$2.self-closing.typo3-fluid'
         patterns: [
           {
             include: '#fluid-attributes'
@@ -180,7 +182,7 @@ repository:
         '''
         captures:
           0:
-            name: 'tag.start.typo3-fluid'
+            name: 'meta.tag.start.typo3-fluid'
           1:
             name: 'tag.char.lt.typo3-fluid'
           2:
@@ -191,10 +193,11 @@ repository:
             name: 'tag.char.colon.typo3-fluid'
           5:
             name: 'tag.view-helper-name.typo3-fluid'
-        contentName: 'tag.start.attributes.typo3-fluid'
+        contentName: 'meta.tag.start.attributes.typo3-fluid'
         end: '''(?x)
-          (>)                           #  1. start char: gt
-          (\\s*)                        #  2. content
+          (                             #  1. start tag
+            (>)                         #  2. char: gt
+          )
           (                             #  3. end tag
             (<)                         #  4. char: lt
             (\\/)                       #  5. char: slash
@@ -208,11 +211,11 @@ repository:
         '''
         endCaptures:
           1:
-            name: 'tag.start.char.gt.typo3-fluid'
+            name: 'meta.tag.start.typo3-fluid'
           2:
-            name: 'tag.content.typo3-fluid'
+            name: 'tag.char.gt.typo3-fluid'
           3:
-            name: 'tag.end.typo3-fluid'
+            name: 'meta.tag.end.typo3-fluid'
           4:
             name: 'tag.char.lt.typo3-fluid'
           5:
@@ -227,7 +230,7 @@ repository:
             name: 'tag.view-helper-name.typo3-fluid'
           10:
             name: 'tag.char.gt.typo3-fluid'
-        name: 'tag.element.$2.empty.typo3-fluid'
+        name: 'meta.tag.element.$2.empty.typo3-fluid'
         patterns: [
           {
             include: '#fluid-attributes'
@@ -247,7 +250,7 @@ repository:
         '''
         captures:
           0:
-            name: 'tag.start.typo3-fluid'
+            name: 'meta.tag.start.typo3-fluid'
           1:
             name: 'tag.char.lt.typo3-fluid'
           2:
@@ -270,7 +273,7 @@ repository:
         '''
         endCaptures:
           0:
-            name: 'tag.end.typo3-fluid'
+            name: 'meta.tag.end.typo3-fluid'
           1:
             name: 'tag.char.lt.typo3-fluid'
           2:
@@ -285,16 +288,16 @@ repository:
             name: 'tag.view-helper-name.typo3-fluid'
           7:
             name: 'tag.char.gt.typo3-fluid'
-        name: 'tag.element.$2.typo3-fluid'
+        name: 'meta.tag.element.$2.typo3-fluid'
         patterns: [
           {
             begin: '\\G'
-            contentName: 'tag.start.attributes.typo3-fluid'
+            contentName: 'meta.tag.start.attributes.typo3-fluid'
             end: '>'
             endCaptures:
               0:
                 name: 'tag.start.char.gt.typo3-fluid'
-            name: 'tag.start.typo3-fluid'
+            name: 'meta.tag.start.typo3-fluid'
             patterns: [
               {
                 include: '#fluid-attributes'
@@ -304,7 +307,7 @@ repository:
           {
             begin: '(?<=>)'
             end: '(?=</[a-zA-Z][.a-zA-Z0-9]*:[a-zA-Z][.a-zA-Z0-9]*>)'
-            name: 'tag.content.typo3-fluid'
+            name: 'meta.tag.content.typo3-fluid'
             patterns: [
               {
                 include: '#fluid-elements'
@@ -342,7 +345,7 @@ repository:
         endCaptures:
           0:
             name: 'tag.char.quotes.end.typo3-fluid'
-        name: 'tag.attribute.$1.typo3-fluid'
+        name: 'meta.tag.attribute.$1.typo3-fluid'
         patterns: [
           {
             include: '#inline-notation'
@@ -369,7 +372,7 @@ repository:
         endCaptures:
           0:
             name: 'tag.char.apos.end.typo3-fluid'
-        name: 'tag.attribute.$1.typo3-fluid'
+        name: 'meta.tag.attribute.$1.typo3-fluid'
         patterns: [
           {
             include: '#inline-notation'
