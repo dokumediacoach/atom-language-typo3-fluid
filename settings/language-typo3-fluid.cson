@@ -1,12 +1,14 @@
 '.text.html.typo3-fluid':
   editor:
     foldEndPattern: '''(?x)
-      \n\t\t(</(?i:head|body|table|thead|tbody|tfoot|tr|div|select|fieldset|style|script|ul|ol|li|form|dl|section|article|header|footer|nav|aside)>\n\t\t
-      |</[a-zA-Z][.a-zA-Z0-9]*:[a-zA-Z][.a-zA-Z0-9]*>\n\t\t
-      |^(?!.*?<!--).*?--\\s*>\n\t\t
-      |^<!--\\ end\\ tminclude\\ -->$\n\t\t
-      |<\\?(?:php)?.*\\bend(if|for(each)?|while)\\b\n\t\t
-      |\\{\\{?/(if|foreach|capture|literal|foreach|php|section|strip)\n\t\t|^[^{]*\\}\n\t\t|^\\s*\\)[,;]\n\t\t)
+      \n\t\t(
+        </(?i:head|body|table|thead|tbody|tfoot|tr|div|select|fieldset|style|script|ul|ol|li|form|dl|section|article|header|footer|nav|aside)>\n\t\t
+        |</[a-zA-Z][.a-zA-Z0-9]*:[a-zA-Z][.a-zA-Z0-9]*>\n\t\t
+        |^(?!.*?<!--).*?--\\s*>\n\t\t
+        |^<!--\\ end\\ tminclude\\ -->$\n\t\t
+        |<\\?(?:php)?.*\\bend(if|for(each)?|while)\\b\n\t\t
+        |\\{\\{?/(if|foreach|capture|literal|foreach|php|section|strip)\n\t\t|^[^{]*\\}\n\t\t|^\\s*\\)[,;]\n\t\t
+      )
     '''
     increaseIndentPattern: '''(?x)
       <(?!\\?|(?:area|base|br|col|frame|hr|html|img|input|link|meta|param)\\b|[^>]*/>)
