@@ -1,0 +1,63 @@
+@import "syntax-variables";
+
+.syntax--typo3-fluid {
+  .syntax--tag {
+    &.syntax--element-name {
+      color: @syntax-color-tag;
+    }
+    &.syntax--attribute-name {
+      color: @syntax-color-attribute;
+    }
+    &.syntax--attribute-value,
+    &.syntax--char.quotes,
+    &.syntax--char.apos {
+      color: @syntax-color-snippet;
+    }
+  }
+  .syntax--inline {
+    &.syntax--char.syntax--curly-bracket,
+    &.syntax--char.syntax--chain {
+      color: @syntax-color-class;
+      font-weight: bold;
+    }
+    &.syntax--view-helper {
+      &.syntax--namespace-prefix,
+      &.syntax--char.syntax--colon,
+      &.syntax--name,
+      &.syntax--char.syntax--bracket {
+        color: @syntax-color-function;
+      }
+      &.syntax--property.syntax--name {
+        color: @syntax-color-property;
+      }
+    }
+    &.syntax--string {
+      color: @syntax-color-value;
+    }
+    &.syntax--variable-name {
+      color: @syntax-color-variable;
+    }
+    &.syntax--expression {
+      &.syntax--operator {
+        color: @syntax-color-keyword;
+        &.syntax--ternary {
+          font-weight: bold;
+        }
+      }
+      &.syntax--type {
+        color: @syntax-color-class;
+      }
+      &.syntax--math.syntax--number {
+        color: @syntax-color-constant;
+      }
+    }
+    &.syntax--array {
+      &.syntax--index {
+        color: @syntax-color-constant;
+      }
+      &.syntax--key {
+        color: @syntax-color-variable;
+      }
+    }
+  }
+}

@@ -15,40 +15,21 @@ patterns: [
     match: '({)(namespace)\\s+([a-zA-Z][.a-zA-Z0-9]*)(=)([^}]+)\\s*(})'
     captures:
       1:
-        name: 'punctuation.definition.bold.inline-notation.begin.typo3-fluid'
+        name: 'inline.char.curly-bracket.begin.typo3-fluid'
       2:
-        name: 'keyword.namespace.typo3-fluid'
+        name: 'inline.keyword.namespace.typo3-fluid'
       3:
-        name: 'variable.ns-prefix-$1.phpns-prefix.typo3-fluid'
+        name: 'inline.variable.namespace-prefix.typo3-fluid'
       4:
-        name: 'punctuation.separator.prefix-namespace.typo3-fluid'
+        name: 'inline.char.equals.typo3-fluid'
       5:
-        name: 'string.other.link.ns-prefix-$1.phpns-typo3.typo3-fluid'
+        name: 'string.other.link.php-namespace.typo3-fluid'
       6:
-        name: 'punctuation.definition.bold.inline-notation.end.typo3-fluid'
+        name: 'inline.char.curly-bracket.end.typo3-fluid'
     name: 'meta.phpns-definition.typo3-fluid'
   }
   {
-    begin: '(</?)([a-zA-Z][.a-zA-Z0-9]*)(:)([a-zA-Z][.a-zA-Z0-9]*)?'
-    beginCaptures:
-      1:
-        name: 'punctuation.definition.tag.begin.typo3-fluid'
-      2:
-        name: 'entity.name.tag.ns-prefix-$2.xmlns-prefix.typo3-fluid'
-      3:
-        name: 'entity.name.tag.colon.typo3-fluid'
-      4:
-        name: 'entity.name.tag.view-helper.typo3-fluid'
-    end: '>'
-    endCaptures:
-      0:
-        name: 'punctuation.definition.tag.end.typo3-fluid'
-    name: 'meta.fluid-tag.view-helper.typo3-fluid'
-    patterns: [
-      {
-        include: '#tag-stuff'
-      }
-    ]
+    include: '#fluid-elements'
   }
   {
     include: '#inline-notation'
@@ -63,6 +44,8 @@ injections:
       {
         match: '\\b(xmlns:)([a-zA-Z][.a-zA-Z0-9]*)(=)((")(http:\\/\\/typo3\\.org\\/ns\\/[^"]+)("))'
         captures:
+          0:
+            name: 'meta.xmlns-definition.typo3-fluid'
           1:
             name: 'entity.other.attribute-name.xmlns-and-colon.typo3-fluid'
           2:
@@ -81,6 +64,8 @@ injections:
       {
         match: '\\b(xmlns:)([a-zA-Z][.a-zA-Z0-9]*)(=)((\')(http:\\/\\/typo3.org\\/ns\\/[^\']+)(\'))'
         captures:
+          0:
+            name: 'meta.xmlns-definition.typo3-fluid'
           1:
             name: 'entity.other.attribute-name.xmlns-and-colon.typo3-fluid'
           2:
@@ -99,6 +84,8 @@ injections:
       {
         match: '\\b(data-namespace-typo3-fluid)(=)((")(true)("))'
         captures:
+          0:
+            name: 'meta.data-namespace-attribute.typo3-fluid'
           1:
             name: 'entity.other.attribute-name.data-namespace-typo3-fluid.typo3-fluid'
           2:
@@ -115,6 +102,8 @@ injections:
       {
         match: '\\b(data-namespace-typo3-fluid)(=)((\')(true)(\'))'
         captures:
+          0:
+            name: 'meta.data-namespace-attribute.typo3-fluid'
           1:
             name: 'entity.other.attribute-name.data-namespace-typo3-fluid.typo3-fluid'
           2:
@@ -136,74 +125,270 @@ injections:
       }
     ]
 repository:
-  'tag-stuff':
+  'fluid-elements':
     patterns: [
       {
-        include: '#tag-property-attribute'
+        begin: '''(?x)
+          # self closing fluid element start tag
+          (<)                                      # 1. char: lt
+          (                                        # 2. element name
+            ([a-zA-Z][.a-zA-Z0-9]*)                # 3. namespace prefix
+            (:)                                    # 4. char: colon
+            ([a-zA-Z][.a-zA-Z0-9]*)?               # 5. view helper name
+          )
+          # following attributes (optional), slash and greater than
+          (?=(?:\\s+[_a-zA-Z][-_.a-zA-Z0-9:]*=(?:"[^"]*"|\'[^\']*\'))*\\s*\\/>)
+        '''
+        captures:
+          0:
+            name: 'meta.tag.start.typo3-fluid'
+          1:
+            name: 'tag.char.lt.typo3-fluid'
+          2:
+            name: 'tag.element-name.typo3-fluid'
+          3:
+            name: 'tag.namespace-prefix.typo3-fluid'
+          4:
+            name: 'tag.char.colon.typo3-fluid'
+          5:
+            name: 'tag.view-helper-name.typo3-fluid'
+        contentName: 'meta.tag.start.attributes.typo3-fluid'
+        end: '(/)(>)'
+        endCaptures:
+          0:
+            name: 'meta.tag.start.typo3-fluid'
+          1:
+            name: 'tag.char.slash.typo3-fluid'
+          2:
+            name: 'tag.char.gt.typo3-fluid'
+        name: 'meta.tag.element.$2.self-closing.typo3-fluid'
+        patterns: [
+          {
+            include: '#fluid-attributes'
+          }
+        ]
       }
       {
-        include: '#string-double-quoted'
+        begin: '''(?x)
+          # empty fluid element start tag
+          (<)                                      # 1. char: lt
+          (                                        # 2. element name
+            ([a-zA-Z][.a-zA-Z0-9]*)                # 3. namespace prefix
+            (:)                                    # 4. char: colon
+            ([a-zA-Z][.a-zA-Z0-9]*)?               # 5. view helper name
+          )
+          # following attributes (optional), no content and end tag
+          (?=(?:\\s+[_a-zA-Z][-_.a-zA-Z0-9:]*=(?:"[^"]*"|\'[^\']*\'))*\\s*><\\/\\2>)
+        '''
+        captures:
+          0:
+            name: 'meta.tag.start.typo3-fluid'
+          1:
+            name: 'tag.char.lt.typo3-fluid'
+          2:
+            name: 'tag.element-name.typo3-fluid'
+          3:
+            name: 'tag.namespace-prefix.typo3-fluid'
+          4:
+            name: 'tag.char.colon.typo3-fluid'
+          5:
+            name: 'tag.view-helper-name.typo3-fluid'
+        contentName: 'meta.tag.start.attributes.typo3-fluid'
+        end: '''(?x)
+          (                             #  1. start tag
+            (>)                         #  2. char: gt
+          )
+          (                             #  3. end tag
+            (<)                         #  4. char: lt
+            (\\/)                       #  5. char: slash
+            (                           #  6. element name
+              ([a-zA-Z][.a-zA-Z0-9]*)   #  7. namespace prefix
+              (:)                       #  8. char: colon
+              ([a-zA-Z][.a-zA-Z0-9]*)   #  9. view helper name
+            )
+            (>)                         # 10. char: gt
+          )
+        '''
+        endCaptures:
+          1:
+            name: 'meta.tag.start.typo3-fluid'
+          2:
+            name: 'tag.char.gt.typo3-fluid'
+          3:
+            name: 'meta.tag.end.typo3-fluid'
+          4:
+            name: 'tag.char.lt.typo3-fluid'
+          5:
+            name: 'tag.char.slash.typo3-fluid'
+          6:
+            name: 'tag.element-name.typo3-fluid'
+          7:
+            name: 'tag.namespace-prefix.typo3-fluid'
+          8:
+            name: 'tag.char.colon.typo3-fluid'
+          9:
+            name: 'tag.view-helper-name.typo3-fluid'
+          10:
+            name: 'tag.char.gt.typo3-fluid'
+        name: 'meta.tag.element.$2.empty.typo3-fluid'
+        patterns: [
+          {
+            include: '#fluid-attributes'
+          }
+        ]
       }
       {
-        include: '#string-single-quoted'
+        begin: '''(?x)
+          # fluid element with start and end tag
+          (<)                                      # 1. char: lt
+          (                                        # 2. element name
+            ([a-zA-Z][.a-zA-Z0-9]*)                # 3. namespace prefix
+            (:)                                    # 4. char: colon
+            ([a-zA-Z][.a-zA-Z0-9]*)?               # 5. view helper name
+          )
+          (?=[\\s>]) # following space or greater than
+        '''
+        captures:
+          0:
+            name: 'meta.tag.start.typo3-fluid'
+          1:
+            name: 'tag.char.lt.typo3-fluid'
+          2:
+            name: 'tag.element-name.typo3-fluid'
+          3:
+            name: 'tag.namespace-prefix.typo3-fluid'
+          4:
+            name: 'tag.char.colon.typo3-fluid'
+          5:
+            name: 'tag.view-helper-name.typo3-fluid'
+        end: '''(?x)
+          (<)                         # 1. char: lt
+          (\\/)                       # 2. char: slash
+          (                           # 3. element name
+            ([a-zA-Z][.a-zA-Z0-9]*)   # 4. namespace prefix
+            (:)                       # 5. char: colon
+            ([a-zA-Z][.a-zA-Z0-9]*)   # 6. view helper name
+          )
+          (>)                         # 7. char: gt
+        '''
+        endCaptures:
+          0:
+            name: 'meta.tag.end.typo3-fluid'
+          1:
+            name: 'tag.char.lt.typo3-fluid'
+          2:
+            name: 'tag.char.slash.typo3-fluid'
+          3:
+            name: 'tag.element-name.typo3-fluid'
+          4:
+            name: 'tag.namespace-prefix.typo3-fluid'
+          5:
+            name: 'tag.char.colon.typo3-fluid'
+          6:
+            name: 'tag.view-helper-name.typo3-fluid'
+          7:
+            name: 'tag.char.gt.typo3-fluid'
+        name: 'meta.tag.element.$2.typo3-fluid'
+        patterns: [
+          {
+            begin: '\\G'
+            contentName: 'meta.tag.start.attributes.typo3-fluid'
+            end: '>'
+            endCaptures:
+              0:
+                name: 'tag.char.gt.typo3-fluid'
+            name: 'meta.tag.start.typo3-fluid'
+            patterns: [
+              {
+                include: '#fluid-attributes'
+              }
+            ]
+          }
+          {
+            begin: '(?<=>)'
+            end: '(?=</[a-zA-Z][.a-zA-Z0-9]*:[a-zA-Z][.a-zA-Z0-9]*>)'
+            name: 'meta.tag.content.typo3-fluid'
+            patterns: [
+              {
+                include: '#fluid-elements'
+              }
+              {
+                include: '#inline-notation'
+              }
+              {
+                include: 'text.html.basic'
+              }
+            ]
+          }
+        ]
       }
     ]
-  'tag-property-attribute':
-    begin: '([^\\s/=>"\'<]+)(=)'
-    captures:
-      1:
-        name: 'entity.other.attribute-name.view-helper-property.typo3-fluid'
-      2:
-        name: 'punctuation.separator.key-value.typo3-fluid'
-    end: '(?!\\G)|(?=\\s|/?>)'
-    name: 'meta.attribute-with-value.view-helper-property.typo3-fluid'
+  'fluid-attributes':
     patterns: [
       {
-        include: '#string-double-quoted'
+        begin: '''(?x)
+          # attribute with double quoted value
+          (?<=\\s)  # preceding space character
+          ([_a-zA-Z][-_.a-zA-Z0-9:]*)  # 1. attribute name
+          (=)                          # 2. char: equals
+          (")                          # 3. char: quotes
+        '''
+        captures:
+          1:
+            name: 'tag.attribute-name.typo3-fluid'
+          2:
+            name: 'tag.char.equals.typo3-fluid'
+          3:
+            name: 'tag.char.quotes.begin.typo3-fluid'
+        contentName: 'tag.attribute-value.typo3-fluid'
+        end: '"'
+        endCaptures:
+          0:
+            name: 'tag.char.quotes.end.typo3-fluid'
+        name: 'meta.tag.attribute.$1.typo3-fluid'
+        patterns: [
+          {
+            include: '#inline-notation'
+          }
+        ]
       }
       {
-        include: '#string-single-quoted'
-      }
-    ]
-  'string-double-quoted':
-    begin: '"'
-    beginCaptures:
-      0:
-        name: 'punctuation.definition.string.begin.typo3-fluid'
-    end: '"'
-    endCaptures:
-      0:
-        name: 'punctuation.definition.string.end.typo3-fluid'
-    name: 'string.quoted.double.typo3-fluid'
-    patterns: [
-      {
-        include: '#inline-notation'
-      }
-    ]
-  'string-single-quoted':
-    begin: '\''
-    beginCaptures:
-      0:
-        name: 'punctuation.definition.string.begin.typo3-fluid'
-    end: '\''
-    endCaptures:
-      0:
-        name: 'punctuation.definition.string.end.typo3-fluid'
-    name: 'string.quoted.single.typo3-fluid'
-    patterns: [
-      {
-        include: '#inline-notation'
+        begin: '''(?x)
+          # attribute with single quoted value
+          (?<=\\s)  # preceding space character
+          ([_a-zA-Z][-_.a-zA-Z0-9:]*)  # 1. attribute name
+          (=)                          # 2. char: equals
+          (\')                         # 3. char: apos
+        '''
+        captures:
+          1:
+            name: 'tag.attribute-name.typo3-fluid'
+          2:
+            name: 'tag.char.equals.typo3-fluid'
+          3:
+            name: 'tag.char.apos.begin.typo3-fluid'
+        contentName: 'tag.attribute-value.typo3-fluid'
+        end: '\''
+        endCaptures:
+          0:
+            name: 'tag.char.apos.end.typo3-fluid'
+        name: 'meta.tag.attribute.$1.typo3-fluid'
+        patterns: [
+          {
+            include: '#inline-notation'
+          }
+        ]
       }
     ]
   'inline-notation':
     begin: '{'
     beginCaptures:
       0:
-        name: 'punctuation.definition.bold.inline-notation.begin.typo3-fluid'
+        name: 'inline.char.curly-bracket.begin.typo3-fluid'
     end: '}'
     endCaptures:
       0:
-        name: 'punctuation.definition.bold.inline-notation.end.typo3-fluid'
+        name: 'inline.char.curly-bracket.end.typo3-fluid'
     name: 'meta.inline-notation.typo3-fluid'
     patterns: [
       {
@@ -225,25 +410,25 @@ repository:
         match: '\\s(->)\\s+'
         captures:
           1:
-            name: 'punctuation.definition.bold.chain.typo3-fluid'
+            name: 'inline.char.chain.typo3-fluid'
       }
       {
         begin: '([a-zA-Z][.a-zA-Z0-9]*)(:)([a-zA-Z][.a-zA-Z0-9]*)(\\()'
         beginCaptures:
           1:
-            name: 'keyword.other.special-method.inline-view-helper-name.ns-prefix-$1.xmlns-prefix.typo3-fluid'
+            name: 'inline.view-helper.namespace-prefix.typo3-fluid'
           2:
-            name: 'keyword.other.special-method.inline-view-helper-name.colon.typo3-fluid'
+            name: 'inline.view-helper.char.colon.typo3-fluid'
           3:
-            name: 'keyword.other.special-method.inline-view-helper-name.view-helper.typo3-fluid'
+            name: 'inline.view-helper.name.typo3-fluid'
           4:
-            name: 'punctuation.definition.inline-view-helper-properties.begin.typo3-fluid'
-        contentName: 'meta.inline-view-helper-properties.typo3-fluid'
+            name: 'inline.view-helper.char.bracket.begin.typo3-fluid'
+        contentName: 'meta.inline.view-helper.properties.typo3-fluid'
         end: '\\)'
         endCaptures:
           0:
-            name: 'punctuation.definition.inline-view-helper-properties.end.typo3-fluid'
-        name: 'meta.inline-view-helper.typo3-fluid'
+            name: 'inline.view-helper.char.bracket.end.typo3-fluid'
+        name: 'meta.inline.view-helper.typo3-fluid'
         patterns: [
           {
             include: '#inline-properties'
@@ -253,11 +438,11 @@ repository:
     ]
   'inline-properties':
     begin: '(?<=[(,])\\s*'
-    contentName: 'meta.inline-property.typo3-fluid'
+    contentName: 'meta.inline.property.typo3-fluid'
     end: '(,)|(?=\\))'
     endCaptures:
       1:
-        name: 'punctuation.separator.inline-properties.typo3-fluid'
+        name: 'inline.properties.char.comma.typo3-fluid'
     patterns: [
       {
         include: '#inline-property'
@@ -267,10 +452,10 @@ repository:
     begin: '([a-zA-Z][.a-zA-Z0-9]*)(:)\\s*'
     beginCaptures:
       1:
-        name: 'constant.variable.inline-property-name.typo3-fluid'
+        name: 'inline.property.name.typo3-fluid'
       2:
-        name: 'punctuation.separator.key-value.typo3-fluid'
-    contentName: 'meta.inline-property-value.typo3-fluid'
+        name: 'inline.property.char.colon.typo3-fluid'
+    contentName: 'meta.inline.property.value.typo3-fluid'
     end: '\\s*(?=[,)])'
     patterns: [
       {
@@ -293,12 +478,12 @@ repository:
     begin: '\\\\*\''
     beginCaptures:
       0:
-        name: 'punctuation.inline-string-value.begin.typo3-fluid'
+        name: 'inline.string.begin.typo3-fluid'
     end: '\\\\*\''
     endCaptures:
       0:
-        name: 'punctuation.inline-string-value.end.typo3-fluid'
-    name: 'string.inline-value.typo3-fluid'
+        name: 'inline.string.end.typo3-fluid'
+    name: 'inline.string.value.typo3-fluid'
     patterns: [
       {
         include: '#inline-notation'
@@ -308,7 +493,7 @@ repository:
     match: '([a-zA-Z][.a-zA-Z0-9]*)(?!:)'
     captures:
       1:
-        name: 'variable.inline-variable-name.typo3-fluid'
+        name: 'inline.variable-name.typo3-fluid'
   'inline-expression':
     patterns: [
       {
@@ -325,29 +510,29 @@ repository:
     match: '(?<=\\s)(as)\\s+([a-zA-Z][.a-zA-Z]*)'
     captures:
       1:
-        name: 'keyword.expression-operator.casting-expression.typo3-fluid'
+        name: 'inline.expression.casting.operator.as.typo3-fluid'
       2:
-        name: 'entity.name.type.casting-to-type.typo3-fluid'
+        name: 'inline.expression.casting.type.typo3-fluid'
   'inline-expression--math':
     patterns: [
       {
         match: '-?\\d+(?:,\\d+)*(?:\\.\\d+(?:e\\d+)?)?(?!\\:)'
-        name: 'constant.numeric.inline-number.typo3-fluid'
+        name: 'inline.expression.math.number.typo3-fluid'
       }
       {
         match: '[\\+\\-\\*\\/\\%\\^]{1}'
-        name: 'keyword.operator.expression-operator.math-expression.typo3-fluid'
+        name: 'inline.expression.math.operator.typo3-fluid'
       }
     ]
   'inline-expression--ternary':
     begin: '(?<=\\s)(\\?)\\s+'
     beginCaptures:
       1:
-        name: 'keyword.expression-operator.ternary-expression.typo3-fluid'
+        name: 'inline.expression.ternary.operator.question-mark.typo3-fluid'
     end: '\\s+(:)(?=\\s)'
     endCaptures:
       1:
-        name: 'keyword.expression-operator.ternary-expression.typo3-fluid'
+        name: 'inline.expression.ternary.operator.colon.typo3-fluid'
     patterns: [
       {
         include: '#inline-content'
@@ -357,15 +542,15 @@ repository:
     begin: '(?:(\\d+)|([a-zA-Z][.a-zA-Z]*))(:)'
     beginCaptures:
       1:
-        name: 'constant.numeric.array-index.typo3-fluid'
+        name: 'inline.array.index.typo3-fluid'
       2:
-        name: 'constant.variable.array-key.typo3-fluid'
+        name: 'inline.array.key.typo3-fluid'
       3:
-        name: 'punctuation.separator.key-value.typo3-fluid'
-    end: '(?!\\G)|(,)|(?=\\})'
+        name: 'inline.array.char.colon.typo3-fluid'
+    end: '(,)|(?=\\})'
     endCaptures:
       1:
-        name: 'punctuation.separator.inline-array-objects.typo3-fluid'
+        name: 'inline.array.char.comma.typo3-fluid'
     patterns: [
       {
         include: '#inline-content'
