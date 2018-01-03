@@ -1,6 +1,6 @@
 {
   "name": "language-typo3-fluid",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "TYPO3 Fluid language support in Atom",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
